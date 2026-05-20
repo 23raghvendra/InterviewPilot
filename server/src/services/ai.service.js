@@ -20,6 +20,25 @@ function checkApiKey() {
     }
 }
 
+async function generateWithFallback(options) {
+    try {
+        return await ai.models.generateContent(options);
+    } catch (error) {
+        console.error("Primary model failed:", error?.message);
+        // Fallback to 1.5-flash if 2.5-flash is overloaded
+        if (options.model === 'gemini-2.5-flash') {
+            console.log("Falling back to gemini-1.5-flash...");
+            try {
+                return await ai.models.generateContent({ ...options, model: 'gemini-1.5-flash' });
+            } catch (fallbackError) {
+                console.error("Fallback model also failed:", fallbackError?.message);
+                throw fallbackError;
+            }
+        }
+        throw error;
+    }
+}
+
 // ─────────────────────────────────────────
 // 1. GENERATE INTERVIEW QUESTIONS
 // ─────────────────────────────────────────
@@ -56,7 +75,7 @@ Guidelines:
 - Topics should cover breadth of ${domain || interviewType}
 - Return ONLY the JSON array, nothing else`;
 
-    const response = await ai.models.generateContent({
+    const response = await generateWithFallback({
         model: 'gemini-2.5-flash',
         contents: userPrompt,
         config: {
@@ -73,7 +92,7 @@ Guidelines:
         return JSON.parse(cleaned);
     } catch (e) {
         // Retry with stricter instruction
-        const retryResponse = await ai.models.generateContent({
+        const retryResponse = await generateWithFallback({
             model: 'gemini-2.5-flash',
             contents: `The previous response was not valid JSON. Please return ONLY a valid JSON array for interview questions, no other text.\n\nOriginal request: ${userPrompt}`,
             config: {
@@ -128,7 +147,7 @@ Scoring rubric:
 
 Return ONLY the JSON object.`;
 
-    const response = await ai.models.generateContent({
+    const response = await generateWithFallback({
         model: 'gemini-2.5-flash',
         contents: userPrompt,
         config: {
@@ -212,7 +231,7 @@ Return ONLY valid JSON:
   "peerComparisonPercentile": number_0_to_100
 }`;
 
-    const response = await ai.models.generateContent({
+    const response = await generateWithFallback({
         model: 'gemini-2.5-flash',
         contents: userPrompt,
         config: {
@@ -250,7 +269,7 @@ Return ONLY valid JSON:
 export async function generateHint({ question, userSoFar }) {
     checkApiKey();
     
-    const response = await ai.models.generateContent({
+    const response = await generateWithFallback({
         model: 'gemini-2.5-flash',
         contents: `Give ONE subtle, non-spoiling hint for this interview question without giving the answer away.
 Question: "${question.text}"
@@ -270,7 +289,7 @@ Hint (2-3 sentences max, guiding not telling):`,
 export async function generateFollowUp({ question, userAnswer }) {
     checkApiKey();
     
-    const response = await ai.models.generateContent({
+    const response = await generateWithFallback({
         model: 'gemini-2.5-flash',
         contents: `Based on this interview Q&A, generate ONE natural follow-up question an interviewer would ask.
 Original Question: "${question.text}"
