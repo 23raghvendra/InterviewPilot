@@ -123,16 +123,18 @@ export default function LandingPage() {
                         Pilot your prep with hyper-realistic conversational AI. Get instant structural scorecards, custom system-design scenarios, and complete performance breakdown.
                     </motion.p>
 
-                    <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center justify-center gap-5">
-                        <Link to="/auth" className="w-full sm:w-auto">
-                            <button className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-lg font-bold hover:from-brand-500 hover:to-indigo-500 transition-all flex items-center justify-center shadow-lg shadow-brand-500/20 hover:shadow-brand-500/40 hover:scale-[1.03] active:scale-[0.98]">
-                                Start Pilot Session <ArrowRight size={20} className="ml-2" />
-                            </button>
+                    <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center justify-center gap-5 mt-10 mb-16">
+                        <Link 
+                            to="/auth" 
+                            className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-lg font-bold hover:from-brand-500 hover:to-indigo-500 transition-all flex items-center justify-center shadow-lg shadow-brand-500/20 hover:shadow-brand-500/40 hover:scale-[1.03] active:scale-[0.98]"
+                        >
+                            Start Pilot Session <ArrowRight size={20} className="ml-2" />
                         </Link>
-                        <Link to="/auth" className="w-full sm:w-auto">
-                            <div className="w-full sm:w-auto px-10 py-5 rounded-full border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 backdrop-blur-md transition-all text-white font-bold flex items-center justify-center cursor-pointer">
-                                Try Interactive Sandbox
-                            </div>
+                        <Link 
+                            to="/auth" 
+                            className="w-full sm:w-auto px-10 py-5 rounded-full border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 backdrop-blur-md transition-all text-white font-bold flex items-center justify-center hover:scale-[1.03] active:scale-[0.98]"
+                        >
+                            Try Interactive Sandbox
                         </Link>
                     </motion.div>
 
