@@ -41,30 +41,32 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
-/* Base Styles */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+@layer base {
+  /* Base Styles */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
-html {
-  scroll-behavior: smooth;
-}
+  html {
+    scroll-behavior: smooth;
+  }
 
-body {
-  font-family: var(--font-sans);
-  background: var(--color-surface);
-  color: var(--color-text-primary);
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-}
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
 
-::selection {
-  background: var(--color-brand-500);
-  color: #fff;
+  ::selection {
+    background: var(--color-brand-500);
+    color: #fff;
+  }
 }
 
 /* Custom Scrollbar */
