@@ -16,10 +16,11 @@ export const startInterview = asyncHandler(async (req, res) => {
         throw new ApiError(400, 'Interview type is required.');
     }
 
-    // Check for active sessions
+    // Check for active sessions and abandon them if any exist
     const activeSession = await Interview.findOne({ userId: req.user._id, status: 'in_progress' });
     if (activeSession) {
-        throw new ApiError(400, 'You already have an active interview session. Please complete or abandon it first.');
+        activeSession.status = 'abandoned';
+        await activeSession.save();
     }
 
     // Generate questions via AI
