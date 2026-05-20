@@ -91,10 +91,11 @@ export default function LandingPage() {
                         <Link to="/auth" className="text-sm font-semibold text-text-secondary hover:text-white transition-colors px-4 py-2">
                             Log in
                         </Link>
-                        <Link to="/auth">
-                            <button className="px-6 py-2.5 text-sm font-bold rounded-full bg-white text-surface hover:bg-white/90 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] flex items-center gap-2 hover:scale-[1.03] active:scale-[0.98]">
-                                Start Training Free <ArrowRight size={14} />
-                            </button>
+                        <Link 
+                            to="/auth"
+                            className="px-6 py-2.5 text-sm font-bold rounded-full bg-white text-surface hover:bg-white/90 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] flex items-center gap-2 hover:scale-[1.03] active:scale-[0.98]"
+                        >
+                            Start Training Free <ArrowRight size={14} />
                         </Link>
                     </div>
                 </div>
@@ -231,18 +232,19 @@ export default function LandingPage() {
             {/* Core Specialties Section */}
             <section className="py-28 px-6 relative z-10 bg-surface-light border-y border-white/5">
                 <div className="max-w-7xl mx-auto">
-                    <motion.div
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                        variants={fadeInUp}
-                        className="text-center mb-20"
-                    >
-                        <h2 className="text-3xl md:text-5xl font-extrabold mb-6 tracking-tight text-white">Rigorous Specialties</h2>
-                        <p className="text-text-secondary text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-                            Tailored modules engineered to replicate high-tier enterprise vetting standards across multiple coding and design disciplines.
-                        </p>
-                    </motion.div>
+                    <div className="text-center mb-16 md:mb-20">
+                        <motion.div
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            variants={fadeInUp}
+                        >
+                            <h2 className="text-3xl md:text-5xl font-extrabold mb-6 tracking-tight text-white">Rigorous Specialties</h2>
+                            <p className="text-text-secondary text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+                                Tailored modules engineered to replicate high-tier enterprise vetting standards across multiple coding and design disciplines.
+                            </p>
+                        </motion.div>
+                    </div>
 
                     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {interviewTypes.map((type, idx) => {
@@ -271,18 +273,19 @@ export default function LandingPage() {
             {/* Premium Features Grid */}
             <section className="py-28 px-6 relative z-10">
                 <div className="max-w-7xl mx-auto">
-                    <motion.div
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                        variants={fadeInUp}
-                        className="text-center mb-20"
-                    >
-                        <h2 className="text-3xl md:text-5xl font-extrabold mb-6 tracking-tight text-white">Full Vetting Control</h2>
-                        <p className="text-text-secondary text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-                            Advanced mock analytics, semantic comprehension, and adaptive follow-up questions designed to prepare you perfectly.
-                        </p>
-                    </motion.div>
+                    <div className="text-center mb-16 md:mb-20">
+                        <motion.div
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            variants={fadeInUp}
+                        >
+                            <h2 className="text-3xl md:text-5xl font-extrabold mb-6 tracking-tight text-white">Full Vetting Control</h2>
+                            <p className="text-text-secondary text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+                                Advanced mock analytics, semantic comprehension, and adaptive follow-up questions designed to prepare you perfectly.
+                            </p>
+                        </motion.div>
+                    </div>
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {features.map(({ icon: Icon, title, desc, glow }, idx) => (
@@ -320,10 +323,11 @@ export default function LandingPage() {
                             <p className="text-text-secondary text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-6">
                                 Join elite software engineers and PMs using InterviewPilot to discover structural knowledge gaps, test delivery speed, and land top-tier offers.
                             </p>
-                            <Link to="/auth">
-                                <button className="px-12 py-5 bg-white text-surface rounded-full text-lg font-bold hover:bg-white/90 hover:scale-[1.03] active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-                                    Create Free Pilot Space
-                                </button>
+                            <Link 
+                                to="/auth"
+                                className="inline-block px-12 py-5 bg-white text-surface rounded-full text-lg font-bold hover:bg-white/90 hover:scale-[1.03] active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+                            >
+                                Create Free Pilot Space
                             </Link>
                         </div>
                     </motion.div>

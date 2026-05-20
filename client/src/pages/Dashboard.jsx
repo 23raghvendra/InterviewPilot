@@ -99,10 +99,11 @@ export default function Dashboard() {
                     </h1>
                     <p className="text-text-secondary text-sm">Review your semantic proficiency scores and start a new evaluation session.</p>
                 </div>
-                <Link to="/interview/setup">
-                    <button className="px-6 py-3 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-sm font-bold hover:from-brand-500 hover:to-indigo-500 transition-all flex items-center shadow-lg shadow-brand-500/15 hover:shadow-brand-500/35 hover:scale-[1.03] active:scale-[0.98]">
-                        <PlayCircle size={18} className="mr-2" /> Launch New Flight
-                    </button>
+                <Link 
+                    to="/interview/setup"
+                    className="px-6 py-3 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-sm font-bold hover:from-brand-500 hover:to-indigo-500 transition-all flex items-center shadow-lg shadow-brand-500/15 hover:shadow-brand-500/35 hover:scale-[1.03] active:scale-[0.98]"
+                >
+                    <PlayCircle size={18} className="mr-2" /> Launch New Flight
                 </Link>
             </motion.div>
 
@@ -279,10 +280,11 @@ export default function Dashboard() {
                                     <p className="text-xs text-text-secondary font-bold uppercase tracking-wider">Your interview ledger is empty.</p>
                                     <p className="text-[11px] text-text-muted">Launch your first session to receive your premium assessment report.</p>
                                 </div>
-                                <Link to="/interview/setup" className="inline-block pt-1">
-                                    <button className="px-5 py-2.5 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-xs font-bold hover:from-brand-500 hover:to-indigo-500 transition-colors">
-                                        Launch Simulator Now
-                                    </button>
+                                <Link 
+                                    to="/interview/setup" 
+                                    className="inline-block pt-1 px-5 py-2.5 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-xs font-bold hover:from-brand-500 hover:to-indigo-500 transition-colors"
+                                >
+                                    Launch Simulator Now
                                 </Link>
                             </div>
                         )}

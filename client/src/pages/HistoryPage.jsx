@@ -62,10 +62,11 @@ export default function HistoryPage() {
                         <p className="text-sm text-text-secondary font-bold uppercase tracking-wider">No interview history yet.</p>
                         <p className="text-xs text-text-muted">Start your first AI-powered evaluation flight to build up your ledger.</p>
                     </div>
-                    <Link to="/interview/setup" className="inline-block">
-                        <button className="px-6 py-3 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-xs font-bold uppercase tracking-wider hover:from-brand-500 hover:to-indigo-500 transition-colors">
-                            Start first session
-                        </button>
+                    <Link 
+                        to="/interview/setup" 
+                        className="inline-block px-6 py-3 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-xs font-bold uppercase tracking-wider hover:from-brand-500 hover:to-indigo-500 transition-colors"
+                    >
+                        Start first session
                     </Link>
                 </div>
             ) : (
