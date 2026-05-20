@@ -20,17 +20,17 @@ export default function Sidebar() {
             <motion.div
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="glass-light backdrop-blur-2xl px-6 py-3 rounded-full border border-gray-300 shadow-2xl flex items-center gap-6"
+                className="bg-surface/80 backdrop-blur-2xl px-6 py-3 rounded-full border border-white/10 shadow-2xl flex items-center gap-6"
             >
                 {/* Stats subtly integrated */}
-                <div className="hidden md:flex items-center gap-4 pr-6 border-r border-gray-300">
+                <div className="hidden md:flex items-center gap-4 pr-6 border-r border-white/10">
                     <div className="flex items-center gap-2" title="Current Streak">
                         <Flame size={16} className="text-text-secondary" />
-                        <span className="text-sm font-medium">{user?.streak || 0}</span>
+                        <span className="text-sm font-medium text-white">{user?.streak || 0}</span>
                     </div>
                     <div className="flex items-center gap-2" title="Total Sessions">
                         <Trophy size={16} className="text-text-secondary" />
-                        <span className="text-sm font-medium">{user?.totalInterviews || 0}</span>
+                        <span className="text-sm font-medium text-white">{user?.totalInterviews || 0}</span>
                     </div>
                 </div>
 
@@ -41,14 +41,14 @@ export default function Sidebar() {
                             to={path}
                             className={({ isActive }) => `
                                 relative group flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300
-                                ${isActive ? 'bg-blue-600 text-white' : 'text-text-secondary hover:text-gray-900 hover:bg-gray-900/5'}
+                                ${isActive ? 'bg-white text-surface' : 'text-text-secondary hover:text-white hover:bg-white/10'}
                             `}
                         >
                             {({ isActive }) => (
                                 <>
-                                    <Icon size={20} className={isActive ? 'text-surface' : 'text-text-secondary group-hover:text-gray-900'} />
+                                    <Icon size={20} className={isActive ? 'text-surface' : 'text-text-secondary group-hover:text-white transition-colors'} />
                                     {/* Tooltip */}
-                                    <span className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-panel text-xs px-3 py-1.5 rounded-lg border border-gray-300 shadow-lg pointer-events-none whitespace-nowrap">
+                                    <span className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-surface-light text-white text-xs px-3 py-1.5 rounded-lg border border-white/10 shadow-lg pointer-events-none whitespace-nowrap">
                                         {label}
                                     </span>
                                 </>

@@ -35,7 +35,7 @@ function MonoProgressBar({ value }) {
     return (
         <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden mt-2.5">
             <div
-                className="h-full bg-gradient-to-r from-brand-500 to-indigo-500 transition-all duration-1000 ease-out"
+                className="h-full bg-brand-500 transition-all duration-1000 ease-out"
                 style={{ width: `${value || 0}%` }}
             />
         </div>
@@ -124,72 +124,75 @@ export default function Dashboard() {
                 ))}
             </motion.div>
 
-            {/* Main Visuals Row */}
-            <motion.div variants={itemVariants} className="grid lg:grid-cols-2 gap-6">
-                {/* Performance Trend */}
-                <Card className="border border-white/5 bg-panel backdrop-blur-md">
-                    <CardBody className="p-6 space-y-6">
+            {/* Main Visuals Row - HUD Style */}
+            <motion.div variants={itemVariants} className="grid lg:grid-cols-3 gap-6">
+                {/* Skill Radar - Moved to left and made larger like a real radar */}
+                <Card className="border border-white/5 bg-panel backdrop-blur-md lg:col-span-1 flex flex-col">
+                    <CardBody className="p-6 space-y-6 flex-1 flex flex-col">
                         <div className="flex items-center justify-between">
                             <div>
-                                <h3 className="font-bold text-white tracking-tight text-lg">Performance Trend</h3>
-                                <p className="text-xs text-text-secondary mt-1">Rolling evaluation score history (last 10 sessions)</p>
-                            </div>
-                            <div className="w-8 h-8 rounded-xl border border-white/5 bg-white/2 flex items-center justify-center text-text-secondary">
-                                <TrendingUp size={16} />
+                                <h3 className="font-bold text-white tracking-tight text-lg flex items-center gap-2">
+                                    <Target size={18} className="text-brand-400" /> Matrix Scanner
+                                </h3>
                             </div>
                         </div>
-                        {stats?.recentScores?.length > 0 ? (
-                            <div className="pt-2">
-                                <ResponsiveContainer width="100%" height={240}>
-                                    <AreaChart data={[...stats.recentScores].reverse()}>
-                                        <defs>
-                                            <linearGradient id="scoreGradMono" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.2} />
-                                                <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
-                                            </linearGradient>
-                                        </defs>
-                                        <XAxis dataKey="date" tickFormatter={(d) => new Date(d).toLocaleDateString('en', { month: 'short', day: 'numeric' })} tick={{ fill: '#6b7280', fontSize: 10, fontWeight: '600' }} axisLine={false} tickLine={false} dy={10} />
-                                        <YAxis domain={[0, 100]} tick={{ fill: '#6b7280', fontSize: 10, fontWeight: '600' }} axisLine={false} tickLine={false} dx={-10} />
-                                        <ReTooltip contentStyle={{ background: '#090f1d', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', fontSize: '13px', color: '#fff' }} itemStyle={{ color: '#8b5cf6', fontWeight: 'bold' }} />
-                                        <Area type="monotone" dataKey="score" stroke="#8b5cf6" strokeWidth={2.5} fill="url(#scoreGradMono)" animationDuration={1000} />
-                                    </AreaChart>
+                        {stats?.skillBreakdown?.length > 0 ? (
+                            <div className="flex-1 flex items-center justify-center relative">
+                                {/* Radar pulse effect */}
+                                <div className="absolute inset-0 rounded-full border border-brand-500/20 animate-ping" style={{ animationDuration: '4s' }} />
+                                <ResponsiveContainer width="100%" height={280}>
+                                    <RadarChart outerRadius={90} data={stats.skillBreakdown.slice(0, 6)}>
+                                        <PolarGrid stroke="rgba(255, 255, 255, 0.1)" strokeWidth={1} />
+                                        <PolarAngleAxis dataKey="skill" tick={{ fill: '#a1a1aa', fontSize: 10, fontWeight: '500' }} />
+                                        <Radar name="Score" dataKey="score" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.2} strokeWidth={2} animationDuration={1500} />
+                                    </RadarChart>
                                 </ResponsiveContainer>
                             </div>
                         ) : (
-                            <div className="h-[240px] flex flex-col items-center justify-center text-text-muted text-sm border border-dashed border-white/5 rounded-2xl bg-white/1">
-                                <TrendingUp size={24} className="mb-2 text-text-muted/30" />
-                                <p className="font-medium text-xs">Run fully graded interviews to populate your timeline</p>
+                            <div className="flex-1 flex flex-col items-center justify-center text-text-muted text-sm border border-dashed border-white/5 rounded-2xl bg-white/1 mt-4 p-8 text-center">
+                                <Target size={32} className="mb-3 text-text-muted/30" />
+                                <p className="font-medium text-xs text-white">Radar Offline</p>
+                                <p className="text-[10px] mt-1">Complete an evaluation to calculate metrics</p>
                             </div>
                         )}
                     </CardBody>
                 </Card>
 
-                {/* Skill Radar */}
-                <Card className="border border-white/5 bg-panel backdrop-blur-md">
-                    <CardBody className="p-6 space-y-6">
+                {/* Performance Trend */}
+                <Card className="border border-white/5 bg-panel backdrop-blur-md lg:col-span-2 flex flex-col">
+                    <CardBody className="p-6 space-y-6 flex-1 flex flex-col">
                         <div className="flex items-center justify-between">
                             <div>
-                                <h3 className="font-bold text-white tracking-tight text-lg">Vetting Skill Matrix</h3>
-                                <p className="text-xs text-text-secondary mt-1">Aggregated semantic rating distribution</p>
+                                <h3 className="font-bold text-white tracking-tight text-lg flex items-center gap-2">
+                                    <TrendingUp size={18} className="text-brand-400" /> Flight Trajectory
+                                </h3>
                             </div>
-                            <div className="w-8 h-8 rounded-xl border border-white/5 bg-white/2 flex items-center justify-center text-text-secondary">
-                                <Award size={16} />
+                            <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full bg-white/5 text-text-secondary border border-white/10">
+                                Last 10 Sessions
                             </div>
                         </div>
-                        {stats?.skillBreakdown?.length > 0 ? (
-                            <div className="flex justify-center pt-2">
-                                <ResponsiveContainer width="100%" height={240}>
-                                    <RadarChart outerRadius={85} data={stats.skillBreakdown.slice(0, 6)}>
-                                        <PolarGrid stroke="rgba(255, 255, 255, 0.05)" strokeWidth={1} />
-                                        <PolarAngleAxis dataKey="skill" tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: '600' }} />
-                                        <Radar name="Score" dataKey="score" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.15} strokeWidth={2} animationDuration={1000} />
-                                    </RadarChart>
+                        {stats?.recentScores?.length > 0 ? (
+                            <div className="flex-1 flex items-end">
+                                <ResponsiveContainer width="100%" height={280}>
+                                    <AreaChart data={[...stats.recentScores].reverse()}>
+                                        <defs>
+                                            <linearGradient id="scoreGradMono" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                                                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                            </linearGradient>
+                                        </defs>
+                                        <XAxis dataKey="date" tickFormatter={(d) => new Date(d).toLocaleDateString('en', { month: 'short', day: 'numeric' })} tick={{ fill: '#71717a', fontSize: 10, fontWeight: '500' }} axisLine={false} tickLine={false} dy={10} />
+                                        <YAxis domain={[0, 100]} tick={{ fill: '#71717a', fontSize: 10, fontWeight: '500' }} axisLine={false} tickLine={false} dx={-10} />
+                                        <ReTooltip contentStyle={{ background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', fontSize: '13px', color: '#fff' }} itemStyle={{ color: '#60a5fa', fontWeight: 'bold' }} />
+                                        <Area type="monotone" dataKey="score" stroke="#3b82f6" strokeWidth={3} fill="url(#scoreGradMono)" animationDuration={1500} />
+                                    </AreaChart>
                                 </ResponsiveContainer>
                             </div>
                         ) : (
-                            <div className="h-[240px] flex flex-col items-center justify-center text-text-muted text-sm border border-dashed border-white/5 rounded-2xl bg-white/1">
-                                <Award size={24} className="mb-2 text-text-muted/30" />
-                                <p className="font-medium text-xs">Complete an evaluation to calculate skills metrics</p>
+                            <div className="flex-1 flex flex-col items-center justify-center text-text-muted text-sm border border-dashed border-white/5 rounded-2xl bg-white/1 mt-4 p-8 text-center">
+                                <TrendingUp size={32} className="mb-3 text-text-muted/30" />
+                                <p className="font-medium text-xs text-white">Trajectory Offline</p>
+                                <p className="text-[10px] mt-1">Run fully graded interviews to chart timeline</p>
                             </div>
                         )}
                     </CardBody>
