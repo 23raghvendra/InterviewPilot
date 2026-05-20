@@ -42,6 +42,79 @@ async function generateWithFallback(options) {
 // ─────────────────────────────────────────
 // 1. GENERATE INTERVIEW QUESTIONS
 // ─────────────────────────────────────────
+
+function generateFallbackQuestions({ interviewType, difficulty, domain, totalQuestions }) {
+    const questionTemplates = {
+        technical: [
+            { text: "Explain the difference between REST and GraphQL APIs. When would you choose one over the other?", type: "descriptive", topic: "API Design" },
+            { text: "How would you optimize a slow database query? Walk me through your debugging process.", type: "descriptive", topic: "Database" },
+            { text: "Describe the concept of microservices architecture. What are its advantages and challenges?", type: "descriptive", topic: "System Design" },
+            { text: "Explain how you would implement authentication and authorization in a web application.", type: "descriptive", topic: "Security" },
+            { text: "What is the difference between SQL and NoSQL databases? Give examples of when to use each.", type: "descriptive", topic: "Database" },
+            { text: "Explain the concept of caching. How would you implement it in a high-traffic application?", type: "descriptive", topic: "Performance" },
+            { text: "What are design patterns? Explain any three patterns you have used in your projects.", type: "descriptive", topic: "Design Patterns" },
+            { text: "How do you ensure code quality in your projects? What tools and practices do you follow?", type: "descriptive", topic: "Best Practices" },
+            { text: "Explain the concept of CI/CD. How would you set up a deployment pipeline?", type: "descriptive", topic: "DevOps" },
+            { text: "What is containerization? Explain the benefits of using Docker in development.", type: "descriptive", topic: "DevOps" },
+        ],
+        behavioral: [
+            { text: "Tell me about a time when you had to deal with a difficult team member. How did you handle it?", type: "situational", topic: "Teamwork" },
+            { text: "Describe a situation where you had to meet a tight deadline. How did you manage your time?", type: "situational", topic: "Time Management" },
+            { text: "Tell me about a project that failed. What did you learn from it?", type: "situational", topic: "Learning" },
+            { text: "Describe a time when you had to learn a new technology quickly. How did you approach it?", type: "situational", topic: "Adaptability" },
+            { text: "Tell me about a time when you disagreed with your manager. How did you handle it?", type: "situational", topic: "Communication" },
+            { text: "Describe a situation where you had to prioritize multiple tasks. How did you decide what to do first?", type: "situational", topic: "Prioritization" },
+            { text: "Tell me about your most challenging project. What made it challenging and how did you overcome it?", type: "situational", topic: "Problem Solving" },
+            { text: "Describe a time when you received critical feedback. How did you respond?", type: "situational", topic: "Growth Mindset" },
+            { text: "Tell me about a time when you had to work with incomplete requirements. How did you proceed?", type: "situational", topic: "Ambiguity" },
+            { text: "Describe a situation where you went above and beyond your job responsibilities.", type: "situational", topic: "Initiative" },
+        ],
+        dsa: [
+            { text: "Given an array of integers, find two numbers that add up to a target sum. Explain your approach and time complexity.", type: "coding", topic: "Arrays" },
+            { text: "Implement a function to reverse a linked list. Discuss both iterative and recursive approaches.", type: "coding", topic: "Linked Lists" },
+            { text: "Given a binary tree, write a function to find its maximum depth. What is the time and space complexity?", type: "coding", topic: "Trees" },
+            { text: "Implement a function to detect a cycle in a linked list. Explain the algorithm you would use.", type: "coding", topic: "Linked Lists" },
+            { text: "Given a string, find the longest substring without repeating characters. Optimize for time complexity.", type: "coding", topic: "Strings" },
+            { text: "Implement a stack that supports push, pop, and getMin operations in O(1) time.", type: "coding", topic: "Stacks" },
+            { text: "Given a sorted array, implement binary search. What are the edge cases to consider?", type: "coding", topic: "Binary Search" },
+            { text: "Implement a function to merge two sorted arrays. What is the optimal approach?", type: "coding", topic: "Arrays" },
+            { text: "Given a matrix of 0s and 1s, find the number of islands. Explain your algorithm.", type: "coding", topic: "Graphs" },
+            { text: "Implement a function to validate a binary search tree. What approach would you use?", type: "coding", topic: "Trees" },
+        ],
+        system_design: [
+            { text: "Design a URL shortening service like bit.ly. Discuss the system architecture and database schema.", type: "descriptive", topic: "System Design" },
+            { text: "How would you design a real-time chat application? Consider scalability and message delivery.", type: "descriptive", topic: "Real-time Systems" },
+            { text: "Design a rate limiter for an API. What algorithms and data structures would you use?", type: "descriptive", topic: "API Design" },
+            { text: "How would you design a notification system that can handle millions of users?", type: "descriptive", topic: "Distributed Systems" },
+            { text: "Design a file storage service like Dropbox. Consider synchronization and conflict resolution.", type: "descriptive", topic: "Storage Systems" },
+            { text: "How would you design a search autocomplete feature? Discuss data structures and caching.", type: "descriptive", topic: "Search Systems" },
+            { text: "Design a distributed cache system. How would you handle cache invalidation?", type: "descriptive", topic: "Caching" },
+            { text: "How would you design an e-commerce checkout system? Consider payment processing and inventory.", type: "descriptive", topic: "E-commerce" },
+            { text: "Design a content delivery network (CDN). How would you optimize for latency?", type: "descriptive", topic: "CDN" },
+            { text: "How would you design a logging and monitoring system for a microservices architecture?", type: "descriptive", topic: "Observability" },
+        ],
+    };
+
+    const templates = questionTemplates[interviewType] || questionTemplates.technical;
+    const questions = [];
+    
+    for (let i = 0; i < Math.min(totalQuestions, templates.length); i++) {
+        const template = templates[i];
+        questions.push({
+            id: `q_${Date.now()}_${i}`,
+            text: template.text,
+            type: template.type,
+            topic: template.topic,
+            difficulty: difficulty,
+            expectedDuration: 120,
+            hints: ["Think about the key concepts involved", "Consider edge cases and trade-offs"],
+            keyPoints: ["Clear explanation", "Practical examples", "Understanding of trade-offs"]
+        });
+    }
+
+    return questions;
+}
+
 export async function generateQuestions({ interviewType, difficulty, domain, company, role, totalQuestions }) {
     checkApiKey();
     
@@ -75,35 +148,47 @@ Guidelines:
 - Topics should cover breadth of ${domain || interviewType}
 - Return ONLY the JSON array, nothing else`;
 
-    const response = await generateWithFallback({
-        model: 'gemini-2.5-flash',
-        contents: userPrompt,
-        config: {
-            systemInstruction: systemPrompt,
-            maxOutputTokens: 4000,
-            temperature: 0.7
-        }
-    });
-
-    const raw = response.text.trim();
-    const cleaned = raw.replace(/```json\n?|\n?```/g, '').trim();
-
     try {
-        return JSON.parse(cleaned);
-    } catch (e) {
-        // Retry with stricter instruction
-        const retryResponse = await generateWithFallback({
+        const response = await generateWithFallback({
             model: 'gemini-2.5-flash',
-            contents: `The previous response was not valid JSON. Please return ONLY a valid JSON array for interview questions, no other text.\n\nOriginal request: ${userPrompt}`,
+            contents: userPrompt,
             config: {
                 systemInstruction: systemPrompt,
                 maxOutputTokens: 4000,
-                temperature: 0.5
+                temperature: 0.7
             }
         });
-        const retryRaw = retryResponse.text.trim();
-        const retryCleaned = retryRaw.replace(/```json\n?|\n?```/g, '').trim();
-        return JSON.parse(retryCleaned);
+
+        const raw = response.text.trim();
+        const cleaned = raw.replace(/```json\n?|\n?```/g, '').trim();
+
+        try {
+            return JSON.parse(cleaned);
+        } catch (parseError) {
+            console.warn("Initial JSON parse failed, retrying with stricter instruction...");
+            
+            const retryResponse = await generateWithFallback({
+                model: 'gemini-2.5-flash',
+                contents: `The previous response was not valid JSON. Please return ONLY a valid JSON array for interview questions, no other text.\n\nOriginal request: ${userPrompt}`,
+                config: {
+                    systemInstruction: systemPrompt,
+                    maxOutputTokens: 4000,
+                    temperature: 0.5
+                }
+            });
+            const retryRaw = retryResponse.text.trim();
+            const retryCleaned = retryRaw.replace(/```json\n?|\n?```/g, '').trim();
+            
+            try {
+                return JSON.parse(retryCleaned);
+            } catch (retryParseError) {
+                console.warn("Retry also failed, using fallback questions");
+                return generateFallbackQuestions({ interviewType, difficulty, domain, totalQuestions });
+            }
+        }
+    } catch (apiError) {
+        console.error("AI API error, using fallback questions:", apiError?.message || apiError);
+        return generateFallbackQuestions({ interviewType, difficulty, domain, totalQuestions });
     }
 }
 
