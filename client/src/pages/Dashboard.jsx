@@ -7,13 +7,14 @@ import { getHistory } from '../api/interview.api';
 import Card, { CardBody } from '../components/ui/Card';
 import { DashboardSkeleton } from '../components/ui/Skeleton';
 import { formatDuration, formatRelativeTime } from '../utils/formatters';
+import { subDays, format, startOfDay } from 'date-fns';
 import {
     XAxis, YAxis, Tooltip as ReTooltip, ResponsiveContainer,
     RadarChart, PolarGrid, PolarAngleAxis, Radar, AreaChart, Area
 } from 'recharts';
 import {
     Trophy, Flame, Target, Clock, PlayCircle, ArrowRight,
-    TrendingUp, Box, Award, ShieldAlert, Zap
+    TrendingUp, Box, Award, ShieldAlert, Zap, Activity
 } from 'lucide-react';
 
 const easeOutExpo = [0.16, 1, 0.3, 1];
@@ -38,6 +39,56 @@ function MonoProgressBar({ value }) {
                 className="h-full bg-brand-500 transition-all duration-1000 ease-out"
                 style={{ width: `${value || 0}%` }}
             />
+        </div>
+    );
+}
+
+function ActivityHeatmap({ scores }) {
+    // Generate last 84 days (12 weeks)
+    const days = Array.from({ length: 84 }).map((_, i) => {
+        const d = subDays(new Date(), 83 - i);
+        return startOfDay(d);
+    });
+
+    const scoresMap = new Map();
+    if (scores && Array.isArray(scores)) {
+        scores.forEach(s => {
+            scoresMap.set(startOfDay(new Date(s.date)).getTime(), s.score);
+        });
+    }
+
+    return (
+        <div className="flex flex-col gap-2">
+            <div className="flex flex-wrap gap-[3px]">
+                {days.map(d => {
+                    const timestamp = d.getTime();
+                    const score = scoresMap.get(timestamp);
+                    let colorClass = 'bg-white/5 border-white/5';
+                    if (score >= 90) colorClass = 'bg-brand-500 border-brand-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]';
+                    else if (score >= 70) colorClass = 'bg-brand-500/80 border-brand-500/80';
+                    else if (score >= 50) colorClass = 'bg-brand-500/50 border-brand-500/50';
+                    else if (score > 0) colorClass = 'bg-brand-500/30 border-brand-500/30';
+
+                    return (
+                        <div 
+                            key={timestamp} 
+                            className={`w-[14px] h-[14px] rounded-[3px] border ${colorClass} transition-colors hover:border-white`}
+                            title={`${format(d, 'MMM d, yyyy')}: ${score ? score + ' score' : 'No activity'}`}
+                        />
+                    );
+                })}
+            </div>
+            <div className="flex items-center justify-end gap-2 text-[9px] text-text-muted font-medium uppercase tracking-widest mt-2">
+                <span>Less</span>
+                <div className="flex gap-[3px]">
+                    <div className="w-[10px] h-[10px] rounded-[2px] bg-white/5" />
+                    <div className="w-[10px] h-[10px] rounded-[2px] bg-brand-500/30" />
+                    <div className="w-[10px] h-[10px] rounded-[2px] bg-brand-500/50" />
+                    <div className="w-[10px] h-[10px] rounded-[2px] bg-brand-500/80" />
+                    <div className="w-[10px] h-[10px] rounded-[2px] bg-brand-500 shadow-[0_0_6px_rgba(59,130,246,0.4)]" />
+                </div>
+                <span>More</span>
+            </div>
         </div>
     );
 }
@@ -74,11 +125,21 @@ export default function Dashboard() {
         return <DashboardSkeleton />;
     }
 
+    const getRank = (score) => {
+        if (score >= 90) return { title: 'Elite Pilot', color: 'text-brand-400' };
+        if (score >= 75) return { title: 'Senior Pilot', color: 'text-emerald-400' };
+        if (score >= 50) return { title: 'Junior Pilot', color: 'text-amber-400' };
+        return { title: 'Cadet', color: 'text-text-secondary' };
+    };
+
+    const avgScore = stats?.overview?.averageScore || user?.averageScore || 0;
+    const rank = getRank(avgScore);
+
     const statCards = [
-        { label: 'Total Sessions', value: stats?.overview?.totalInterviews || user?.totalInterviews || 0, icon: Target, glow: 'group-hover:border-purple-500/30' },
-        { label: 'Average Score', value: `${stats?.overview?.averageScore || user?.averageScore || 0}%`, icon: Trophy, glow: 'group-hover:border-blue-500/30' },
-        { label: 'Current Streak', value: `${stats?.overview?.streak || user?.streak || 0} days`, icon: Flame, glow: 'group-hover:border-amber-500/30' },
-        { label: 'Total Practice', value: formatDuration(stats?.overview?.totalDuration || 0), icon: Clock, glow: 'group-hover:border-emerald-500/30' },
+        { label: 'Total Sessions', value: stats?.overview?.totalInterviews || user?.totalInterviews || 0, icon: Target, glow: 'group-hover:border-brand-500/30' },
+        { label: 'Average Score', value: `${avgScore}%`, icon: Trophy, glow: 'group-hover:border-brand-500/30' },
+        { label: 'Current Streak', value: `${stats?.overview?.streak || user?.streak || 0} days`, icon: Flame, glow: 'group-hover:border-brand-500/30' },
+        { label: 'Total Practice', value: formatDuration(stats?.overview?.totalDuration || 0), icon: Clock, glow: 'group-hover:border-brand-500/30' },
     ];
 
     return (
@@ -94,9 +155,14 @@ export default function Dashboard() {
             {/* Greeting Command Panel */}
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="space-y-1">
-                    <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
-                        Welcome back, {user?.name?.split(' ')[0] || 'Pilot'} <Zap size={20} className="text-brand-400 animate-bounce" style={{ animationDuration: '3s' }} />
-                    </h1>
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                            Welcome back, {user?.name?.split(' ')[0] || 'Pilot'} <Zap size={20} className="text-brand-400 animate-bounce" style={{ animationDuration: '3s' }} />
+                        </h1>
+                        <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-white/5 border border-white/10 ${rank.color}`}>
+                            {rank.title}
+                        </span>
+                    </div>
                     <p className="text-text-secondary text-sm">Review your semantic proficiency scores and start a new evaluation session.</p>
                 </div>
                 <Link 
@@ -201,30 +267,20 @@ export default function Dashboard() {
 
             {/* Details and List Row */}
             <motion.div variants={itemVariants} className="grid lg:grid-cols-3 gap-6">
-                {/* Type Distribution */}
+                {/* Activity Heatmap */}
                 <Card className="border border-white/5 bg-panel backdrop-blur-md">
                     <CardBody className="p-6 space-y-6">
-                        <div>
-                            <h3 className="font-bold text-white tracking-tight text-lg">Top Arenas</h3>
-                            <p className="text-xs text-text-secondary mt-1">Practice session distribution metrics</p>
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h3 className="font-bold text-white tracking-tight text-lg flex items-center gap-2">
+                                    <Activity size={18} className="text-brand-400" /> Operational Consistency
+                                </h3>
+                                <p className="text-xs text-text-secondary mt-1">12-week activity ledger</p>
+                            </div>
                         </div>
-                        {stats?.typeDistribution?.length > 0 ? (
-                            <div className="space-y-5">
-                                {stats.typeDistribution.map((t) => (
-                                    <div key={t.type} className="space-y-1">
-                                        <div className="flex justify-between text-xs font-semibold">
-                                            <span className="capitalize text-white">{t.type.replace('_', ' ')}</span>
-                                            <span className="text-text-secondary">{t.count} run{t.count > 1 ? 's' : ''}</span>
-                                        </div>
-                                        <MonoProgressBar value={t.avgScore} />
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="py-10 text-center border border-dashed border-white/5 rounded-2xl bg-white/1">
-                                <p className="text-xs text-text-muted">No distribution data available yet</p>
-                            </div>
-                        )}
+                        <div className="pt-2">
+                            <ActivityHeatmap scores={stats?.recentScores} />
+                        </div>
                     </CardBody>
                 </Card>
 

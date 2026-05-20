@@ -9,9 +9,10 @@ import Modal from '../components/ui/Modal';
 import { formatTime } from '../utils/formatters';
 import {
     Clock, Mic, MicOff, Send, SkipForward, Lightbulb, AlertTriangle,
-    CheckCircle, XCircle, ArrowRight, Volume2, ChevronRight, PlayCircle, Zap, ShieldAlert
+    CheckCircle, XCircle, ArrowRight, Volume2, ChevronRight, PlayCircle, Zap, ShieldAlert, Code2
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import Editor from '@monaco-editor/react';
 
 function ProgressBarMono({ value, max }) {
     const percentage = Math.min(100, Math.max(0, (value / max) * 100)) || 0;
@@ -31,6 +32,7 @@ export default function InterviewPage() {
     const { interview, setInterview, currentQuestionIndex, setCurrentIndex, updateQuestionFeedback, resetInterview, saveAnswer, getAnswer } = useInterviewStore();
 
     const [answer, setAnswer] = useState('');
+    const [code, setCode] = useState('');
     const [feedback, setFeedback] = useState(null);
     const [isEvaluating, setIsEvaluating] = useState(false);
     const [phase, setPhase] = useState('answering'); // answering | reviewing
@@ -125,7 +127,9 @@ export default function InterviewPage() {
     };
 
     const handleSubmitAnswer = async () => {
-        if (!answer.trim()) {
+        const finalAnswer = code.trim() ? `Explanation:\n${answer}\n\nCode:\n${code}` : answer;
+
+        if (!finalAnswer.trim()) {
             toast.error('Response buffer empty. Please provide an answer first.');
             return;
         }
@@ -137,7 +141,7 @@ export default function InterviewPage() {
         try {
             const { data } = await submitAnswer(sessionId, {
                 questionIndex: currentQuestionIndex,
-                answer,
+                answer: finalAnswer,
                 timeTaken: (interview.config.timePerQuestion - timeLeft)
             });
             setFeedback(data.data.evaluation);
@@ -155,6 +159,7 @@ export default function InterviewPage() {
         if (currentQuestionIndex < totalQuestions - 1) {
             setCurrentIndex(currentQuestionIndex + 1);
             setAnswer('');
+            setCode('');
             setFeedback(null);
             setHint('');
             setPhase('answering');
@@ -281,14 +286,47 @@ export default function InterviewPage() {
                         </div>
                     )}
 
-                    <textarea
-                        value={answer}
-                        onChange={(e) => setAnswer(e.target.value)}
-                        placeholder="Type or dictate your structural answer here... Explain your rationale, trade-offs, and edge cases clearly."
-                        className="w-full flex-1 bg-transparent border-none outline-none resize-none text-[15px] leading-relaxed text-white placeholder:text-text-muted pt-2"
-                        disabled={isEvaluating}
-                        autoFocus
-                    />
+                    {['technical', 'dsa'].includes(interview.config.interviewType) ? (
+                        <div className="flex-1 flex flex-col md:flex-row gap-6 min-h-[400px]">
+                            <textarea
+                                value={answer}
+                                onChange={(e) => setAnswer(e.target.value)}
+                                placeholder="Explain your rationale, trade-offs, and edge cases clearly..."
+                                className="w-full md:w-1/3 bg-transparent border-none outline-none resize-none text-[14px] leading-relaxed text-white placeholder:text-text-muted pt-2"
+                                disabled={isEvaluating}
+                            />
+                            <div className="flex-1 border border-white/10 rounded-xl overflow-hidden relative shadow-inner bg-[#1e1e1e]">
+                                <div className="absolute top-0 left-0 right-0 h-8 bg-[#2d2d2d] border-b border-white/5 flex items-center px-3 z-10">
+                                    <Code2 size={14} className="text-text-muted mr-2" />
+                                    <span className="text-[10px] font-mono text-text-muted uppercase tracking-widest">Live Editor</span>
+                                </div>
+                                <div className="pt-8 h-full">
+                                    <Editor
+                                        height="100%"
+                                        defaultLanguage="javascript"
+                                        theme="vs-dark"
+                                        value={code}
+                                        onChange={(val) => setCode(val)}
+                                        options={{ 
+                                            minimap: { enabled: false }, 
+                                            fontSize: 14,
+                                            fontFamily: 'JetBrains Mono',
+                                            padding: { top: 16 }
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <textarea
+                            value={answer}
+                            onChange={(e) => setAnswer(e.target.value)}
+                            placeholder="Type or dictate your structural answer here... Explain your rationale, trade-offs, and edge cases clearly."
+                            className="w-full flex-1 bg-transparent border-none outline-none resize-none text-[15px] leading-relaxed text-white placeholder:text-text-muted pt-2"
+                            disabled={isEvaluating}
+                            autoFocus
+                        />
+                    )}
 
                     {/* Dynamic Hint card block */}
                     {hint && (
