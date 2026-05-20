@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 
 export function Skeleton({ className = '' }) {
     return (
-        <div className={`shimmer rounded bg-gray-900/40 border border-white/5 ${className}`} />
+        <div className={`shimmer rounded bg-white/5 border border-white/5 ${className}`} />
     );
 }
 
@@ -20,7 +20,7 @@ export function SkeletonLine({ width = 'w-full', height = 'h-4', className = '' 
 
 export function SkeletonCard({ className = '', children }) {
     return (
-        <div className={`glass p-6 rounded-2xl relative overflow-hidden ${className}`}>
+        <div className={`bg-panel border border-white/5 p-6 rounded-2xl relative overflow-hidden ${className}`}>
             <div className="space-y-4">
                 <div className="flex justify-between items-center">
                     <SkeletonLine width="w-24" height="h-3" />
@@ -54,14 +54,14 @@ export function DashboardSkeleton() {
 
             {/* Charts Row */}
             <div className="grid lg:grid-cols-2 gap-6">
-                <div className="glass p-6 rounded-2xl h-[340px] flex flex-col justify-between">
+                <div className="bg-panel border border-white/5 p-6 rounded-2xl h-[340px] flex flex-col justify-between">
                     <div className="space-y-2">
                         <SkeletonLine width="w-32" height="h-5" />
                         <SkeletonLine width="w-48" height="h-3" />
                     </div>
                     <SkeletonLine width="w-full" height="h-[200px]" className="rounded-xl" />
                 </div>
-                <div className="glass p-6 rounded-2xl h-[340px] flex flex-col justify-between">
+                <div className="bg-panel border border-white/5 p-6 rounded-2xl h-[340px] flex flex-col justify-between">
                     <div className="space-y-2">
                         <SkeletonLine width="w-32" height="h-5" />
                         <SkeletonLine width="w-48" height="h-3" />
@@ -72,7 +72,7 @@ export function DashboardSkeleton() {
 
             {/* Bottom Row */}
             <div className="grid lg:grid-cols-3 gap-6">
-                <div className="glass p-6 rounded-2xl h-[300px] flex flex-col justify-between">
+                <div className="bg-panel border border-white/5 p-6 rounded-2xl h-[300px] flex flex-col justify-between">
                     <SkeletonLine width="w-24" height="h-5" />
                     <div className="space-y-4">
                         {[1, 2, 3].map((j) => (
@@ -87,7 +87,7 @@ export function DashboardSkeleton() {
                     </div>
                 </div>
 
-                <div className="lg:col-span-2 glass p-6 rounded-2xl h-[300px] flex flex-col justify-between">
+                <div className="lg:col-span-2 bg-panel border border-white/5 p-6 rounded-2xl h-[300px] flex flex-col justify-between">
                     <div className="flex justify-between items-center">
                         <SkeletonLine width="w-36" height="h-5" />
                         <SkeletonLine width="w-24" height="h-3.5" />
@@ -125,7 +125,7 @@ export function HistorySkeleton() {
 
             <div className="space-y-4">
                 {[1, 2, 3, 4, 5].map((i) => (
-                    <div key={i} className="p-4 rounded-xl glass flex items-center justify-between gap-4">
+                    <div key={i} className="p-4 rounded-xl bg-panel border border-white/5 flex items-center justify-between gap-4">
                         <div className="flex items-center gap-5 flex-1">
                             <SkeletonCircle size="w-14 h-14" />
                             <div className="flex-1 space-y-2">
@@ -165,11 +165,11 @@ export function ReportSkeleton() {
             </div>
 
             {/* Score Hero */}
-            <div className="p-8 rounded-3xl glass flex flex-col items-center">
+            <div className="p-8 rounded-3xl bg-panel border border-white/5 flex flex-col items-center">
                 <SkeletonCircle size="w-40 h-40" className="mb-8" />
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full border-t border-white/5 pt-8">
                     {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className="p-4 rounded-2xl glass flex flex-col items-center gap-2">
+                        <div key={i} className="p-4 rounded-2xl bg-panel border border-white/5 flex flex-col items-center gap-2">
                             <SkeletonLine width="w-12" height="h-3" />
                             <SkeletonLine width="w-16" height="h-6" />
                         </div>
@@ -178,7 +178,7 @@ export function ReportSkeleton() {
             </div>
 
             {/* Recommendation */}
-            <div className="p-6 rounded-2xl glass flex gap-4">
+            <div className="p-6 rounded-2xl bg-panel border border-white/5 flex gap-4">
                 <SkeletonCircle size="w-12 h-12" className="rounded-xl" />
                 <div className="flex-1 space-y-2">
                     <SkeletonLine width="w-36" height="h-4" />
@@ -188,11 +188,11 @@ export function ReportSkeleton() {
 
             {/* Charts Grid */}
             <div className="grid md:grid-cols-2 gap-6">
-                <div className="p-6 rounded-2xl glass h-[320px] flex flex-col justify-between">
+                <div className="p-6 rounded-2xl bg-panel border border-white/5 h-[320px] flex flex-col justify-between">
                     <SkeletonLine width="w-32" height="h-5" />
                     <SkeletonLine width="w-full" height="h-[220px]" className="rounded-xl" />
                 </div>
-                <div className="p-6 rounded-2xl glass h-[320px] flex flex-col justify-between">
+                <div className="p-6 rounded-2xl bg-panel border border-white/5 h-[320px] flex flex-col justify-between">
                     <SkeletonLine width="w-32" height="h-5" />
                     <SkeletonLine width="w-full" height="h-[220px]" className="rounded-xl" />
                 </div>
