@@ -238,7 +238,7 @@ export default function InterviewSetupPage() {
             </div>
 
             {/* Launch Action Bar */}
-            <div className="p-6 rounded-2xl border border-white/10 bg-panel backdrop-blur-md shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-6 sticky bottom-6 z-20">
+            <div className="p-6 rounded-2xl border border-white/10 bg-panel backdrop-blur-md shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-6 sticky bottom-28 z-20">
                 <div className="flex items-center gap-2 flex-wrap">
                     <span className="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-brand-500/10 border border-brand-500/20 text-brand-400 uppercase tracking-widest">{config.interviewType.replace('_', ' ')}</span>
                     <span className="px-3 py-1.5 rounded-xl text-[10px] font-bold border border-white/5 bg-white/2 text-text-secondary uppercase tracking-widest">{config.difficulty}</span>
