@@ -101,7 +101,7 @@ export default function Dashboard() {
                 </div>
                 <Link 
                     to="/interview/setup"
-                    className="px-6 py-3 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-sm font-bold hover:from-brand-500 hover:to-indigo-500 transition-all flex items-center shadow-lg shadow-brand-500/15 hover:shadow-brand-500/35 hover:scale-[1.03] active:scale-[0.98]"
+                    className="px-6 py-3 bg-white text-surface rounded-full text-sm font-bold hover:bg-white/90 transition-all flex items-center shadow-lg shadow-white/5 hover:shadow-white/10 hover:scale-[1.02] active:scale-[0.98]"
                 >
                     <PlayCircle size={18} className="mr-2" /> Launch New Flight
                 </Link>
@@ -282,7 +282,7 @@ export default function Dashboard() {
                                 </div>
                                 <Link 
                                     to="/interview/setup" 
-                                    className="inline-block pt-1 px-5 py-2.5 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-xs font-bold hover:from-brand-500 hover:to-indigo-500 transition-colors"
+                                    className="inline-block pt-1 px-5 py-2.5 bg-white text-surface rounded-full text-xs font-bold hover:bg-white/90 transition-colors"
                                 >
                                     Launch Simulator Now
                                 </Link>

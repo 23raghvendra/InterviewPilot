@@ -64,7 +64,7 @@ export default function HistoryPage() {
                     </div>
                     <Link 
                         to="/interview/setup" 
-                        className="inline-block px-6 py-3 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-xs font-bold uppercase tracking-wider hover:from-brand-500 hover:to-indigo-500 transition-colors"
+                        className="inline-block px-6 py-3 bg-white text-surface rounded-full text-xs font-bold uppercase tracking-wider hover:bg-white/90 transition-colors"
                     >
                         Start first session
                     </Link>
@@ -113,7 +113,7 @@ export default function HistoryPage() {
                                     {interview.status === 'completed' && interview.reportId && (
                                         <Link
                                             to={`/report/${interview.reportId}`}
-                                            className="px-4 py-2 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-colors shadow-md shadow-brand-500/10"
+                                            className="px-4 py-2 bg-white hover:bg-white/90 text-surface rounded-xl text-xs font-bold uppercase tracking-wider transition-colors shadow-md shadow-white/5"
                                         >
                                             View Report
                                         </Link>

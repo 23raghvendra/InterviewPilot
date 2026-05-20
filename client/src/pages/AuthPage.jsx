@@ -44,19 +44,19 @@ export default function AuthPage() {
         <div className="min-h-screen bg-surface flex text-text-primary selection:bg-brand-500/30 relative overflow-hidden">
             {/* Ambient Background Mesh */}
             <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-                <div className="absolute top-[20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-brand-900/10 filter blur-[100px] animate-pulse-glow" />
-                <div className="absolute bottom-[10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-accent-500/10 filter blur-[120px] animate-pulse-glow" style={{ animationDelay: '2.5s' }} />
-                <div className="absolute inset-0 bg-grid-pattern opacity-30" />
+                <div className="absolute top-[20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-brand-600/5 filter blur-[120px]" />
+                <div className="absolute bottom-[10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-brand-400/5 filter blur-[150px]" />
+                <div className="absolute inset-0 bg-grid-pattern opacity-20" />
             </div>
 
             {/* Left Panel — Interactive Decorative Branding */}
-            <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-surface-light/40 border-r border-white/5 z-10 justify-center items-center">
-                <div className="absolute inset-0 bg-grid-pattern opacity-20" />
+            <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-surface-light border-r border-white/10 z-10 justify-center items-center">
+                <div className="absolute inset-0 bg-grid-pattern opacity-[0.15]" />
                 
                 <div className="relative z-10 flex flex-col justify-center px-16 space-y-12 w-full max-w-xl mx-auto">
                     <Link to="/" className="flex items-center gap-3 w-fit group">
-                        <div className="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-accent-500 flex items-center justify-center overflow-hidden shadow-lg shadow-brand-500/25 group-hover:scale-105 transition-transform">
-                            <Terminal size={20} className="text-white relative z-10" />
+                        <div className="relative w-10 h-10 rounded-xl bg-white flex items-center justify-center overflow-hidden shadow-lg shadow-white/5 group-hover:scale-105 transition-transform">
+                            <Terminal size={20} className="text-surface relative z-10" />
                         </div>
                         <span className="text-2xl font-bold tracking-tight text-white">Interview<span className="text-brand-400 font-medium">Pilot</span></span>
                     </Link>
@@ -65,7 +65,7 @@ export default function AuthPage() {
                         <h2 className="text-4xl md:text-5xl font-extrabold leading-[1.15] tracking-tight text-white">
                             Verify Your Identity &
                             <br />
-                            <span className="text-gradient">Launch Your Session.</span>
+                            <span className="text-brand-400">Launch Your Session.</span>
                         </h2>
 
                         <p className="text-text-secondary text-sm md:text-base leading-relaxed max-w-md">
@@ -73,7 +73,7 @@ export default function AuthPage() {
                         </p>
 
                         {/* Interactive Voice Radar Animation */}
-                        <div className="p-6 rounded-2xl glass border border-white/5 bg-gradient-to-r from-brand-500/5 to-transparent flex items-center justify-between gap-6">
+                        <div className="p-6 rounded-2xl border border-white/10 bg-surface flex items-center justify-between gap-6 shadow-sm">
                             <div className="space-y-1.5">
                                 <span className="text-[10px] font-bold uppercase tracking-widest text-brand-400 flex items-center gap-1.5">
                                     <Cpu size={12} className="animate-pulse" /> Cognitive Audio Parser
@@ -82,7 +82,7 @@ export default function AuthPage() {
                             </div>
                             <div className="flex gap-1 h-6 items-center">
                                 {[1, 2, 3, 4, 5, 6].map((i) => (
-                                    <div key={i} className="wave-bar h-full bg-brand-400/80" style={{ animationDelay: `${i * 0.15}s` }} />
+                                    <div key={i} className="wave-bar h-full bg-brand-400" style={{ animationDelay: `${i * 0.15}s` }} />
                                 ))}
                             </div>
                         </div>
@@ -207,10 +207,10 @@ export default function AuthPage() {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full py-3 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white rounded-xl text-sm font-bold hover:scale-[1.01] active:scale-[0.98] transition-all duration-300 flex items-center justify-center disabled:opacity-75 disabled:scale-100 disabled:pointer-events-none shadow-lg shadow-brand-500/10 hover:shadow-brand-500/20"
+                                className="w-full py-3.5 bg-white hover:bg-white/90 text-surface rounded-xl text-sm font-bold hover:scale-[1.01] active:scale-[0.98] transition-all duration-300 flex items-center justify-center disabled:opacity-75 disabled:scale-100 disabled:pointer-events-none shadow-lg shadow-white/10"
                             >
                                 {isLoading ? (
-                                    <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                                    <span className="w-5 h-5 border-2 border-surface border-t-transparent rounded-full animate-spin"></span>
                                 ) : (
                                     <span className="flex items-center gap-1.5">{isLogin ? 'Sign In Security Profile' : 'Complete Registration'} <ArrowRight size={14} /></span>
                                 )}

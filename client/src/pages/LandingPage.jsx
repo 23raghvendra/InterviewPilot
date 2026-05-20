@@ -10,37 +10,37 @@ const features = [
         icon: Brain, 
         title: 'Adaptive Cognitive AI', 
         desc: 'Our neural evaluation engine dynamically shifts the technical complexity of the follow-ups based on your exact answer quality and verbal confidence.',
-        glow: 'hover:border-purple-500/30'
+        glow: 'hover:border-brand-500/50'
     },
     { 
         icon: Mic, 
         title: 'Immersive Voice Synthesis', 
         desc: 'Interact naturally with our ultra-low latency conversational engine. Simulates the natural flow, interruptions, and pacing of real face-to-face interviews.',
-        glow: 'hover:border-blue-500/30'
+        glow: 'hover:border-brand-500/50'
     },
     { 
         icon: BarChart3, 
         title: 'Granular Analytics Stack', 
         desc: 'Receive exhaustive analytical score sheets mapping your strengths, vocabulary quality, architectural logic, and semantic alignment.',
-        glow: 'hover:border-cyan-500/30'
+        glow: 'hover:border-brand-500/50'
     },
     { 
         icon: Sparkles, 
         title: 'Deep Feedback Loops', 
         desc: 'Instant, actionable bullet points showing the exact key concepts you covered, crucial edge cases you missed, and a model ideal answer.',
-        glow: 'hover:border-indigo-500/30'
+        glow: 'hover:border-brand-500/50'
     },
     { 
         icon: Clock, 
         title: 'Time-Boxed Stress Simulation', 
         desc: 'Recreate high-pressure environment limits with adaptive timers. Build mental resilience, clear pacing habits, and robust crisis communication.',
-        glow: 'hover:border-violet-500/30'
+        glow: 'hover:border-brand-500/50'
     },
     { 
         icon: Shield, 
         title: 'Secure & Cryptographic', 
         desc: 'All evaluations, custom configurations, and analytical reports are locked in your private space, fully encrypted and visible only to you.',
-        glow: 'hover:border-pink-500/30'
+        glow: 'hover:border-brand-500/50'
     }
 ];
 
@@ -71,9 +71,8 @@ export default function LandingPage() {
         <div className="min-h-screen bg-surface overflow-hidden text-text-primary selection:bg-brand-500/30 relative">
             {/* Ambient Background Mesh */}
             <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-                <div className="absolute top-[-10%] left-[-20%] w-[60%] h-[60%] rounded-full bg-brand-900/10 filter blur-[120px] animate-pulse-glow" />
-                <div className="absolute bottom-[20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-accent-500/5 filter blur-[140px] animate-pulse-glow" style={{ animationDelay: '2s' }} />
-                <div className="absolute inset-0 bg-grid-pattern opacity-40" />
+                <div className="absolute top-[-20%] left-[10%] w-[80%] h-[60%] rounded-full bg-brand-600/10 filter blur-[150px]" />
+                <div className="absolute inset-0 bg-grid-pattern opacity-30" />
             </div>
 
             {/* Header Navigation */}
@@ -127,13 +126,13 @@ export default function LandingPage() {
                     <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center justify-center gap-5 mt-10 mb-16">
                         <Link 
                             to="/auth" 
-                            className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-lg font-bold hover:from-brand-500 hover:to-indigo-500 transition-all flex items-center justify-center shadow-lg shadow-brand-500/20 hover:shadow-brand-500/40 hover:scale-[1.03] active:scale-[0.98]"
+                            className="w-full sm:w-auto px-10 py-4 bg-white text-surface rounded-full text-lg font-bold hover:bg-white/90 transition-all flex items-center justify-center shadow-lg shadow-white/10 hover:shadow-white/20 hover:scale-[1.02] active:scale-[0.98]"
                         >
                             Start Pilot Session <ArrowRight size={20} className="ml-2" />
                         </Link>
                         <Link 
                             to="/auth" 
-                            className="w-full sm:w-auto px-10 py-5 rounded-full border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 backdrop-blur-md transition-all text-white font-bold flex items-center justify-center hover:scale-[1.03] active:scale-[0.98]"
+                            className="w-full sm:w-auto px-10 py-4 rounded-full border border-white/15 hover:border-white/30 bg-surface text-white font-bold flex items-center justify-center hover:bg-white/5 transition-all hover:scale-[1.02] active:scale-[0.98]"
                         >
                             Try Interactive Sandbox
                         </Link>

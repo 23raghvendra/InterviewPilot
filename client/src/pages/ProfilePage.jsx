@@ -150,7 +150,7 @@ export default function ProfilePage() {
                             placeholder="Add skill node (e.g., Docker, Distributed Systems)..."
                             className="flex-1 px-4 py-3 bg-surface border border-white/5 rounded-xl text-sm text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 placeholder:text-text-muted transition-colors"
                         />
-                        <button onClick={addSkill} className="px-4 py-3 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-xl text-xs font-bold uppercase tracking-wider hover:from-brand-500 hover:to-indigo-500 transition-colors flex items-center justify-center cursor-pointer">
+                        <button onClick={addSkill} className="px-4 py-3 bg-white text-surface hover:bg-white/90 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center cursor-pointer">
                             <Plus size={18} />
                         </button>
                     </div>
@@ -176,7 +176,7 @@ export default function ProfilePage() {
                             placeholder="Add target enterprise (e.g., Stripe, Netflix)..."
                             className="flex-1 px-4 py-3 bg-surface border border-white/5 rounded-xl text-sm text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 placeholder:text-text-muted transition-colors"
                         />
-                        <button onClick={addCompany} className="px-4 py-3 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-xl text-xs font-bold uppercase tracking-wider hover:from-brand-500 hover:to-indigo-500 transition-colors flex items-center justify-center cursor-pointer">
+                        <button onClick={addCompany} className="px-4 py-3 bg-white text-surface hover:bg-white/90 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center cursor-pointer">
                             <Plus size={18} />
                         </button>
                     </div>
@@ -186,7 +186,7 @@ export default function ProfilePage() {
                     <button
                         onClick={handleSave}
                         disabled={saving}
-                        className="px-6 py-3.5 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-xs font-bold uppercase tracking-wider hover:from-brand-500 hover:to-indigo-500 transition-all flex items-center gap-2 disabled:opacity-70 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                        className="px-6 py-3.5 bg-white text-surface hover:bg-white/90 rounded-full text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 disabled:opacity-70 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                     >
                         {saving ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span> : <Save size={14} />}
                         Sync Security Matrix
@@ -229,7 +229,7 @@ export default function ProfilePage() {
                         <button
                             type="submit"
                             disabled={changingPw}
-                            className="px-6 py-3 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-xl text-xs font-bold uppercase tracking-wider hover:from-brand-500 hover:to-indigo-500 transition-colors disabled:opacity-75 flex w-full sm:w-auto justify-center cursor-pointer"
+                            className="px-6 py-3 bg-white text-surface hover:bg-white/90 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors disabled:opacity-75 flex w-full sm:w-auto justify-center cursor-pointer"
                         >
                             {changingPw ? 'Committing...' : 'Commit New Keyphrase'}
                         </button>

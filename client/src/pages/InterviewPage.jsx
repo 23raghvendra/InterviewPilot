@@ -208,7 +208,7 @@ export default function InterviewPage() {
             <div className="text-center py-20 flex flex-col items-center justify-center space-y-6">
                 <ShieldAlert size={36} className="text-text-muted" />
                 <p className="text-text-muted mb-4">Evaluation Session Ledger Not Found</p>
-                <button onClick={() => navigate('/dashboard')} className="px-6 py-2.5 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-sm font-bold hover:from-brand-500 hover:to-indigo-500 transition">Go to Dashboard</button>
+                <button onClick={() => navigate('/dashboard')} className="px-6 py-2.5 bg-white text-surface hover:bg-white/90 rounded-full text-sm font-bold transition">Go to Dashboard</button>
             </div>
         );
     }
@@ -333,7 +333,7 @@ export default function InterviewPage() {
                             <button
                                 onClick={handleSubmitAnswer}
                                 disabled={isEvaluating}
-                                className="px-6 py-2.5 rounded-full bg-gradient-to-r from-brand-600 to-indigo-600 text-white text-xs font-bold hover:from-brand-500 hover:to-indigo-500 transition-all flex items-center gap-2 shadow-lg shadow-brand-500/15 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-75 disabled:scale-100 disabled:pointer-events-none cursor-pointer"
+                                className="px-6 py-2.5 rounded-full bg-white hover:bg-white/90 text-surface text-xs font-bold transition-all flex items-center gap-2 shadow-lg shadow-white/5 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-75 disabled:scale-100 disabled:pointer-events-none cursor-pointer"
                             >
                                 {isEvaluating ? <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Send size={14} />}
                                 Submit Answer
@@ -423,7 +423,7 @@ export default function InterviewPage() {
                         <div className="flex justify-end border-t border-white/5 pt-6">
                             <button
                                 onClick={handleNext}
-                                className="px-6 py-3 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-xs font-bold hover:from-brand-500 hover:to-indigo-500 transition-all flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                                className="px-6 py-3 bg-rose-600 hover:bg-rose-500 text-white rounded-full text-xs font-bold transition-all flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                             >
                                 {currentQuestionIndex < totalQuestions - 1 ? (
                                     <>Load Next Prompt <ChevronRight size={16} /></>

@@ -107,7 +107,7 @@ export default function InterviewSetupPage() {
                                 className={`
                                     flex-1 py-3.5 rounded-xl border text-xs font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer
                                     ${config.difficulty === value
-                                        ? 'border-brand-500 bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-[0_0_20px_rgba(139,92,246,0.15)]'
+                                        ? 'border-brand-500 bg-brand-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.15)]'
                                         : 'border-white/5 bg-white/2 hover:border-white/10 hover:bg-white/4 text-text-secondary hover:text-white'
                                     }
                                 `}
@@ -249,7 +249,7 @@ export default function InterviewSetupPage() {
                 <button
                     disabled={isStarting}
                     onClick={handleStart}
-                    className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-sm font-bold hover:from-brand-500 hover:to-indigo-500 shadow-lg shadow-brand-500/20 hover:shadow-brand-500/40 hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center justify-center disabled:opacity-70 disabled:scale-100 disabled:pointer-events-none cursor-pointer"
+                    className="w-full sm:w-auto px-8 py-4 bg-white text-surface rounded-full text-sm font-bold hover:bg-white/90 shadow-lg shadow-white/5 hover:shadow-white/10 hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center justify-center disabled:opacity-70 disabled:scale-100 disabled:pointer-events-none cursor-pointer"
                 >
                     {isStarting ? (
                         <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>

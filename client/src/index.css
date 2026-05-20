@@ -1,56 +1,50 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
-  /* Futuristic Premium Dark Theme */
-  --color-brand-50: #f5f3ff;
-  --color-brand-100: #ede9fe;
-  --color-brand-200: #ddd6fe;
-  --color-brand-300: #c4b5fd;
-  --color-brand-400: #a78bfa;
-  --color-brand-500: #8b5cf6; /* Electric Violet */
-  --color-brand-600: #7c3aed;
-  --color-brand-700: #6d28d9;
-  --color-brand-800: #5b21b6;
-  --color-brand-900: #4c1d95;
+  /* Modern Professional SaaS Dark Theme (Linear/Vercel style) */
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-300: #93c5fd;
+  --color-brand-400: #60a5fa;
+  --color-brand-500: #3b82f6; /* Modern Blue */
+  --color-brand-600: #2563eb;
+  --color-brand-700: #1d4ed8;
+  --color-brand-800: #1e40af;
+  --color-brand-900: #1e3a8a;
 
-  --color-accent-500: #3b82f6; /* Cyber Blue */
-  --color-accent-400: #60a5fa;
+  --color-accent-500: #f8fafc; /* Crisp White Accent */
+  --color-accent-400: #f1f5f9;
 
-  /* Premium Dark Theme Color Palette */
-  --color-surface: #030712; /* Deep Space Black */
-  --color-surface-light: #0b0f19; /* Nebula Dark */
-  --color-panel: rgba(11, 15, 25, 0.65); /* Glassmorphism Panel */
-  --color-panel-light: rgba(17, 24, 39, 0.8);
-  --color-panel-border: rgba(255, 255, 255, 0.06);
+  /* Sleek Dark Theme Color Palette */
+  --color-surface: #000000; /* Pure Black Background */
+  --color-surface-light: #0a0a0a; /* Elevated Surface */
+  --color-panel: rgba(10, 10, 10, 0.8); /* Glassmorphism Panel */
+  --color-panel-light: rgba(17, 17, 17, 0.8);
+  --color-panel-border: rgba(255, 255, 255, 0.08);
 
   /* Utility Status Colors */
-  --color-success: #10b981; /* Emerald */
-  --color-success-light: rgba(16, 185, 129, 0.1);
-  --color-warning: #f59e0b; /* Amber */
-  --color-warning-light: rgba(245, 158, 11, 0.1);
-  --color-danger: #ef4444; /* Rose */
-  --color-danger-light: rgba(239, 68, 68, 0.1);
+  --color-success: #10b981;
+  --color-success-light: rgba(16, 185, 129, 0.15);
+  --color-warning: #f59e0b;
+  --color-warning-light: rgba(245, 158, 11, 0.15);
+  --color-danger: #ef4444;
+  --color-danger-light: rgba(239, 68, 68, 0.15);
 
   /* Typography Colors */
-  --color-text-primary: #f9fafb; /* Ice White */
-  --color-text-secondary: #9ca3af; /* Cool Gray */
-  --color-text-muted: #6b7280; /* Shadow Gray */
+  --color-text-primary: #ededed; /* Soft White */
+  --color-text-secondary: #a1a1aa; /* Zinc 400 */
+  --color-text-muted: #71717a; /* Zinc 500 */
 
-  --font-sans: 'Outfit', 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
 @layer base {
-  /* Base Styles */
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
   html {
     scroll-behavior: smooth;
+    background-color: var(--color-surface);
   }
 
   body {
@@ -64,7 +58,7 @@
   }
 
   ::selection {
-    background: var(--color-brand-500);
+    background: rgba(255, 255, 255, 0.2);
     color: #fff;
   }
 }
@@ -76,59 +70,56 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-surface);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 9999px;
   transition: all 0.3s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-brand-500);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* Tailwind v4 Utility Directives */
 @utility glass {
   background: var(--color-panel);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--color-panel-border);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
 @utility glass-light {
-  background: rgba(17, 24, 39, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+  background: var(--color-panel-light);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 @utility glow-brand {
-  box-shadow: 0 0 25px rgba(139, 92, 246, 0.25), 0 0 50px rgba(139, 92, 246, 0.1);
+  box-shadow: 0 0 40px rgba(59, 130, 246, 0.15);
 }
 
 @utility glow-accent {
-  box-shadow: 0 0 25px rgba(59, 130, 246, 0.25), 0 0 50px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
 }
 
 @utility gradient-brand {
-  background: linear-gradient(135deg, var(--color-brand-600), var(--color-accent-500));
+  background: linear-gradient(135deg, #111111, #0a0a0a);
   color: white;
 }
 
 @utility gradient-mesh {
   background: 
-    radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
-    radial-gradient(circle at 90% 10%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
-    radial-gradient(circle at 50% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.03) 0%, transparent 40%),
     var(--color-surface);
 }
 
 @utility text-gradient {
-  background: linear-gradient(to right, #a78bfa, #60a5fa);
+  background: linear-gradient(to right, #ffffff, #a1a1aa);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -136,9 +127,9 @@
 
 @utility bg-grid-pattern {
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 50px 50px;
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
   mask-image: radial-gradient(circle at center, black, transparent 80%);
   -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
 }
@@ -146,9 +137,9 @@
 @utility shimmer {
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.03) 25%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.03) 75%
+    rgba(255, 255, 255, 0.02) 25%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.02) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite linear;
@@ -157,13 +148,13 @@
 /* Animations */
 @keyframes float {
   0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-6px); }
   100% { transform: translateY(0px); }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; transform: scale(1); filter: blur(40px); }
-  50% { opacity: 0.7; transform: scale(1.08); filter: blur(50px); }
+  0%, 100% { opacity: 0.3; transform: scale(1); filter: blur(40px); }
+  50% { opacity: 0.5; transform: scale(1.05); filter: blur(50px); }
 }
 
 @keyframes shimmer {
@@ -187,8 +178,8 @@
 /* Custom Voice Wave Indicator */
 .wave-bar {
   display: inline-block;
-  width: 4px;
-  background-color: var(--color-brand-400);
+  width: 3px;
+  background-color: var(--color-text-primary);
   border-radius: 9999px;
   animation: voice-wave 1.2s ease-in-out infinite;
 }
@@ -205,6 +196,6 @@
 .premium-switch {
   position: relative;
   display: inline-block;
-  width: 48px;
+  width: 44px;
   height: 24px;
 }
