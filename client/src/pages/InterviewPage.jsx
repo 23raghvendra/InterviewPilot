@@ -9,17 +9,16 @@ import Modal from '../components/ui/Modal';
 import { formatTime } from '../utils/formatters';
 import {
     Clock, Mic, MicOff, Send, SkipForward, Lightbulb, AlertTriangle,
-    CheckCircle, XCircle, ArrowRight, Volume2, ChevronRight, PlayCircle
+    CheckCircle, XCircle, ArrowRight, Volume2, ChevronRight, PlayCircle, Zap, ShieldAlert
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-// Custom minimal progress bar for InterviewPage
 function ProgressBarMono({ value, max }) {
     const percentage = Math.min(100, Math.max(0, (value / max) * 100)) || 0;
     return (
-        <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
             <div
-                className="h-full bg-blue-600 transition-all duration-500 ease-out"
+                className="h-full bg-gradient-to-r from-brand-500 to-indigo-500 transition-all duration-500 ease-out"
                 style={{ width: `${percentage}%` }}
             />
         </div>
@@ -49,7 +48,7 @@ export default function InterviewPage() {
         if (phase === 'answering' && answer.trim()) {
             handleSubmitAnswer();
         } else if (phase === 'answering') {
-            toast('Time is up! Moving to next question.', { icon: '⏰' });
+            toast('Time has expired! Skipping to the next evaluation criteria.', { icon: '⏰' });
             handleSkip();
         }
     };
@@ -65,7 +64,7 @@ export default function InterviewPage() {
 
     const { isListening, isSupported, startListening, stopListening, speak, stopSpeaking } = useSpeech({
         onResult: (text) => setAnswer(prev => (prev + ' ' + text).trim()),
-        onError: (err) => toast.error(`Voice error: ${err}`)
+        onError: (err) => toast.error(`Audio translation error: ${err}`)
     });
 
     // Load interview if not in store
@@ -87,7 +86,7 @@ export default function InterviewPage() {
         }
     }, [currentQuestionIndex, interview]);
 
-    // Auto-save
+    // Auto-save answer
     useEffect(() => {
         if (answer.trim() && phase === 'answering') {
             saveAnswer(currentQuestionIndex, answer);
@@ -118,7 +117,7 @@ export default function InterviewPage() {
             const savedAnswer = getAnswer(currentQuestionIndex);
             if (savedAnswer) setAnswer(savedAnswer);
         } catch {
-            toast.error('Failed to load interview');
+            toast.error('Failed to parse interview session');
             navigate('/dashboard');
         } finally {
             setLoading(false);
@@ -127,7 +126,7 @@ export default function InterviewPage() {
 
     const handleSubmitAnswer = async () => {
         if (!answer.trim()) {
-            toast.error('Please provide an answer');
+            toast.error('Response buffer empty. Please provide an answer first.');
             return;
         }
         stopTimer();
@@ -144,7 +143,7 @@ export default function InterviewPage() {
             setFeedback(data.data.evaluation);
             updateQuestionFeedback(currentQuestionIndex, data.data.evaluation);
         } catch (err) {
-            toast.error('Evaluation failed. Please try again.');
+            toast.error('AI synthesis failed. Let\'s resume your timer.');
             setPhase('answering');
             startTimer();
         } finally {
@@ -169,7 +168,7 @@ export default function InterviewPage() {
             await skipQuestion(sessionId, { questionIndex: currentQuestionIndex });
             handleNext();
         } catch {
-            toast.error('Failed to skip');
+            toast.error('Failed to flag skip on this prompt.');
         }
     };
 
@@ -180,7 +179,7 @@ export default function InterviewPage() {
             resetInterview();
             navigate(`/report/${data.data.reportId}`);
         } catch {
-            toast.error('Failed to end interview');
+            toast.error('Could not compile final evaluation report');
         } finally {
             setIsEnding(false);
             setShowEndModal(false);
@@ -197,7 +196,7 @@ export default function InterviewPage() {
             });
             setHint(data.data.hint);
         } catch {
-            toast.error('Failed to get hint');
+            toast.error('Could not load helpful hint');
         } finally {
             setIsGettingHint(false);
         }
@@ -206,140 +205,162 @@ export default function InterviewPage() {
     if (loading) return <FullPageSpinner />;
     if (!interview || !currentQuestion) {
         return (
-            <div className="text-center py-20 flex flex-col items-center">
-                <p className="text-text-muted mb-4">Interview not found</p>
-                <button onClick={() => navigate('/dashboard')} className="px-5 py-2 border border-gray-400 rounded-full text-sm font-semibold hover:bg-gray-900/10 transition">Go to Dashboard</button>
+            <div className="text-center py-20 flex flex-col items-center justify-center space-y-6">
+                <ShieldAlert size={36} className="text-text-muted" />
+                <p className="text-text-muted mb-4">Evaluation Session Ledger Not Found</p>
+                <button onClick={() => navigate('/dashboard')} className="px-6 py-2.5 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-sm font-bold hover:from-brand-500 hover:to-indigo-500 transition">Go to Dashboard</button>
             </div>
         );
     }
 
-    const timerColor = timeLeft < 30 ? 'text-red-400' : timeLeft < 60 ? 'text-amber-400' : 'text-gray-900';
+    const timerColor = timeLeft < 30 ? 'text-rose-500' : timeLeft < 60 ? 'text-amber-500' : 'text-emerald-400';
 
     return (
-        <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-500 pb-12">
-            {/* Top Bar */}
-            <div className="flex items-center justify-between flex-wrap gap-4 mb-4">
+        <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-500 pb-16">
+            {/* Session Navigation Bar */}
+            <div className="flex items-center justify-between flex-wrap gap-4 mb-2">
                 <div className="flex items-center gap-3">
-                    <span className="px-3 py-1 bg-gray-900/10 text-gray-900 rounded-full text-xs font-semibold uppercase tracking-wider">
-                        {interview.config.interviewType.replace('_', ' ')}
+                    <span className="px-3 py-1 bg-brand-500/10 border border-brand-500/20 text-brand-400 rounded-xl text-[10px] font-bold uppercase tracking-widest">
+                        {interview.config.interviewType.replace('_', ' ')} PARADIGM
                     </span>
-                    <span className="text-text-secondary text-sm font-medium">
-                        Q {currentQuestionIndex + 1} / {totalQuestions}
+                    <span className="text-text-secondary text-xs font-bold uppercase tracking-widest bg-white/5 border border-white/5 px-3 py-1 rounded-xl">
+                        PROMPT {currentQuestionIndex + 1} / {totalQuestions}
                     </span>
                 </div>
                 <div className="flex items-center gap-4">
-                    <div className={`flex items-center gap-2 text-lg font-mono font-bold ${timerColor}`}>
-                        <Clock size={18} />
+                    <div className={`flex items-center gap-2 text-lg font-mono font-bold bg-white/5 border border-white/5 px-4 py-1.5 rounded-xl ${timerColor}`}>
+                        <Clock size={16} />
                         {formatTime(timeLeft)}
                     </div>
-                    <button onClick={() => setShowEndModal(true)} className="px-4 py-1.5 rounded-full border border-red-500/50 text-red-400 hover:bg-red-500/10 transition-colors text-sm font-semibold">
-                        End Interview
+                    <button onClick={() => setShowEndModal(true)} className="px-4 py-2 rounded-xl border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 hover:border-rose-500/50 transition-all text-xs font-bold uppercase tracking-wider cursor-pointer">
+                        Complete Session
                     </button>
                 </div>
             </div>
 
-            {/* Progress */}
+            {/* Session Progress Tracker */}
             <ProgressBarMono
                 value={currentQuestionIndex + (phase === 'reviewing' ? 1 : 0)}
                 max={totalQuestions}
             />
 
-            {/* Question Card */}
-            <div className={`p-6 rounded-2xl border transition-all duration-300 ${phase === 'answering' ? 'border-gray-400 bg-surface shadow-[0_0_30px_rgba(0,0,0,0.03)]' : 'border-gray-200 bg-surface-light/40'}`}>
-                <div className="flex items-start justify-between gap-4 mb-5">
+            {/* AI Prompter Card */}
+            <div className={`p-8 rounded-2xl border transition-all duration-500 ${phase === 'answering' ? 'border-brand-500/25 bg-panel shadow-[0_0_30px_rgba(139,92,246,0.06)]' : 'border-white/5 bg-panel-light/40'}`}>
+                <div className="flex items-start justify-between gap-4 mb-4">
                     <div className="flex items-center gap-2">
-                        <span className="px-2.5 py-1 rounded-md text-xs font-bold border border-gray-300 text-text-secondary uppercase">{currentQuestion.difficulty}</span>
-                        <span className="px-2.5 py-1 rounded-md text-xs font-medium border border-gray-200 bg-gray-900/5 text-gray-900">{currentQuestion.topic}</span>
-                        <span className="px-2.5 py-1 rounded-md text-xs font-medium border border-gray-200 text-text-muted">{currentQuestion.questionType}</span>
+                        <span className="px-2.5 py-1 rounded-lg text-[9px] font-bold border border-white/10 text-text-secondary bg-white/2 uppercase tracking-wider">{currentQuestion.difficulty}</span>
+                        <span className="px-2.5 py-1 rounded-lg text-[9px] font-bold border border-brand-500/10 bg-brand-500/5 text-brand-400 uppercase tracking-wider">{currentQuestion.topic}</span>
+                        <span className="px-2.5 py-1 rounded-lg text-[9px] font-semibold border border-white/5 text-text-muted bg-white/1 uppercase tracking-wider">{currentQuestion.questionType}</span>
                     </div>
                     {interview.config.enableVoice && (
                         <button
                             onClick={() => speak(currentQuestion.questionText)}
-                            className="p-2 rounded-lg hover:bg-gray-900/10 transition-colors text-text-muted hover:text-gray-900"
-                            title="Read question aloud"
+                            className="p-2 rounded-xl bg-white/5 hover:bg-brand-500/10 text-text-secondary hover:text-brand-400 border border-white/5 hover:border-brand-500/10 transition-colors cursor-pointer"
+                            title="Speak question"
                         >
-                            <Volume2 size={18} />
+                            <Volume2 size={16} />
                         </button>
                     )}
                 </div>
-                <h2 className="text-xl font-medium leading-relaxed text-gray-900 tracking-tight">{currentQuestion.questionText}</h2>
+                <h2 className="text-xl md:text-2xl font-bold leading-relaxed text-white tracking-tight">{currentQuestion.questionText}</h2>
             </div>
 
-            {/* Answer Input / Feedback */}
+            {/* Answer Board vs AI Analysis Panel */}
             {phase === 'answering' ? (
-                <div className="p-6 rounded-2xl border border-gray-200 bg-surface-light/40 backdrop-blur-sm flex flex-col min-h-[300px]">
+                <div className="p-6 rounded-2xl border border-white/5 bg-panel backdrop-blur-md flex flex-col min-h-[340px] shadow-2xl relative">
+                    {/* Pulsing Audio Waves Indicator if voice is recording */}
+                    {isListening && (
+                        <div className="absolute top-6 right-6 flex items-center gap-2 bg-brand-500/10 border border-brand-500/20 px-3.5 py-1.5 rounded-full shadow-[0_0_20px_rgba(139,92,246,0.1)]">
+                            <span className="w-2 h-2 rounded-full bg-brand-400 animate-ping" />
+                            <span className="text-[10px] font-bold text-brand-400 uppercase tracking-wider">Analyzing Speech</span>
+                            <div className="flex gap-0.5 h-3 items-center ml-1">
+                                {[1, 2, 3, 4].map((i) => (
+                                    <div key={i} className="wave-bar w-[3px]" style={{ animationDelay: `${i * 0.15}s`, animationDuration: '0.9s' }} />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
                     <textarea
                         value={answer}
                         onChange={(e) => setAnswer(e.target.value)}
-                        placeholder="Type your answer here... Be thorough and specific."
-                        className="w-full flex-1 bg-transparent border-none outline-none resize-none text-[15px] leading-relaxed text-gray-900 placeholder:text-text-muted"
+                        placeholder="Type or dictate your structural answer here... Explain your rationale, trade-offs, and edge cases clearly."
+                        className="w-full flex-1 bg-transparent border-none outline-none resize-none text-[15px] leading-relaxed text-white placeholder:text-text-muted pt-2"
                         disabled={isEvaluating}
                         autoFocus
                     />
 
-                    {/* Hint */}
+                    {/* Dynamic Hint card block */}
                     {hint && (
-                        <div className="mt-4 p-4 rounded-xl border border-gray-300 bg-gray-900/5">
-                            <div className="flex items-center gap-2 text-gray-900 text-xs font-bold mb-2 uppercase tracking-wide">
-                                <Lightbulb size={14} /> Hint
+                        <div className="mt-4 p-4 rounded-xl border border-brand-500/15 bg-brand-500/5 relative overflow-hidden animate-in slide-in-from-bottom duration-300">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-500" />
+                            <div className="flex items-center gap-2 text-brand-400 text-[10px] font-extrabold mb-1.5 uppercase tracking-wider">
+                                <Lightbulb size={12} /> Live Evaluator Hint
                             </div>
-                            <p className="text-sm text-text-secondary">{hint}</p>
+                            <p className="text-xs text-text-secondary leading-relaxed font-semibold">{hint}</p>
                         </div>
                     )}
 
-                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
-                        <div className="flex items-center gap-2">
-                            {/* Voice */}
+                    {/* Controller bar */}
+                    <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/5">
+                        <div className="flex items-center gap-3">
+                            {/* Speech mic toggle */}
                             {isSupported && (
                                 <button
                                     onClick={isListening ? stopListening : startListening}
-                                    title={isListening ? 'Stop listening' : 'Start voice input'}
-                                    className={`p-2.5 rounded-lg flex items-center gap-2 text-sm font-medium transition-colors ${isListening ? 'bg-blue-600 text-white' : 'border border-gray-300 hover:bg-gray-900/5 text-gray-900'}`}
+                                    title={isListening ? 'Mute transcription' : 'Activate microphone'}
+                                    className={`px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-bold uppercase tracking-wider transition-all border cursor-pointer ${isListening ? 'bg-brand-500 border-brand-500 text-white shadow-lg shadow-brand-500/15' : 'border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 text-white'}`}
                                 >
-                                    {isListening ? <MicOff size={16} /> : <Mic size={16} />}
-                                    {isListening ? 'Recording' : 'Voice'}
+                                    {isListening ? <MicOff size={14} /> : <Mic size={14} />}
+                                    {isListening ? 'Capturing' : 'Voice Mode'}
                                 </button>
                             )}
-                            {/* Hint */}
+                            {/* Hint trigger */}
                             <button
                                 onClick={handleGetHint}
                                 disabled={!!hint || isGettingHint}
-                                className="px-4 py-2.5 rounded-lg border border-gray-300 text-sm font-medium hover:bg-gray-900/5 transition-colors flex items-center gap-2 text-gray-900 disabled:opacity-50 disabled:hover:bg-transparent"
+                                className="px-4 py-2.5 rounded-xl border border-white/10 hover:border-white/20 text-xs font-bold uppercase tracking-wider hover:bg-white/4 transition-colors flex items-center gap-2 text-white disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer"
                             >
-                                {isGettingHint ? <span className="w-4 h-4 border-2 border-gray-400 border-t-white rounded-full animate-spin" /> : <Lightbulb size={16} />}
+                                {isGettingHint ? <span className="w-3.5 h-3.5 border-2 border-brand-400 border-t-white rounded-full animate-spin" /> : <Lightbulb size={14} />}
                                 Hint
                             </button>
                         </div>
 
                         <div className="flex items-center gap-3">
-                            <button onClick={handleSkip} className="px-4 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:text-gray-900 transition-colors flex items-center gap-2">
-                                <SkipForward size={16} /> Skip
+                            <button onClick={handleSkip} className="px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-white hover:bg-white/2 transition-colors flex items-center gap-1.5 cursor-pointer">
+                                <SkipForward size={14} /> Skip
                             </button>
                             <button
                                 onClick={handleSubmitAnswer}
                                 disabled={isEvaluating}
-                                className="px-6 py-2.5 rounded-full bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-[0_0_15px_rgba(0,0,0,0.1)] disabled:opacity-70"
+                                className="px-6 py-2.5 rounded-full bg-gradient-to-r from-brand-600 to-indigo-600 text-white text-xs font-bold hover:from-brand-500 hover:to-indigo-500 transition-all flex items-center gap-2 shadow-lg shadow-brand-500/15 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-75 disabled:scale-100 disabled:pointer-events-none cursor-pointer"
                             >
-                                {isEvaluating ? <span className="w-4 h-4 border-2 border-surface/20 border-t-surface rounded-full animate-spin" /> : <Send size={16} />}
+                                {isEvaluating ? <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Send size={14} />}
                                 Submit Answer
                             </button>
                         </div>
                     </div>
                 </div>
             ) : (
-                /* Feedback Panel */
-                <div className="space-y-4">
-                    {/* Score */}
-                    <div className="p-6 rounded-2xl border border-gray-200 bg-surface-light/40 backdrop-blur-sm">
-                        <div className="flex items-center justify-between mb-6">
-                            <h3 className="font-semibold text-gray-900 tracking-tight">AI Evaluation</h3>
+                /* Premium AI Evaluation Feedback Panel */
+                <div className="space-y-4 animate-in fade-in duration-500">
+                    <div className="p-6 rounded-2xl border border-white/5 bg-panel backdrop-blur-md space-y-6 shadow-2xl">
+                        <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                            <div className="space-y-1">
+                                <h3 className="font-extrabold text-white tracking-tight flex items-center gap-2">
+                                    AI Evaluation <Zap size={16} className="text-brand-400 animate-pulse" />
+                                </h3>
+                                <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest">Real-time parser analysis</p>
+                            </div>
                             {feedback && (
-                                <div className="flex items-center gap-3">
-                                    <span className="text-3xl font-bold text-gray-900 tracking-tighter">
-                                        {feedback.score}<span className="text-lg text-text-muted font-normal">/10</span>
-                                    </span>
-                                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border ${feedback.score >= 7 ? 'border-blue-600 bg-blue-600 text-white' : feedback.score >= 5 ? 'border-gray-300 text-gray-900' : 'border-gray-400 text-text-secondary'}`}>
-                                        {feedback.grade}
+                                <div className="flex items-center gap-4">
+                                    <div className="text-right">
+                                        <div className="text-3xl font-extrabold text-white tracking-tighter">
+                                            {feedback.score}<span className="text-sm text-text-muted font-normal"> / 10</span>
+                                        </div>
+                                    </div>
+                                    <span className={`px-4 py-1.5 rounded-xl text-xs font-bold uppercase tracking-widest border bg-brand-500/10 border-brand-500/25 text-brand-400`}>
+                                        {feedback.grade} Grade
                                     </span>
                                 </div>
                             )}
@@ -347,66 +368,67 @@ export default function InterviewPage() {
 
                         {feedback && (
                             <div className="space-y-6">
-                                <p className="text-[15px] text-text-secondary leading-relaxed">{feedback.detailedFeedback}</p>
+                                <p className="text-sm text-text-secondary leading-relaxed bg-white/1 p-4 rounded-xl border border-white/5">{feedback.detailedFeedback}</p>
 
-                                <div className="grid md:grid-cols-2 gap-4">
-                                    {/* Strengths */}
-                                    <div className="p-4 rounded-xl border border-gray-300 bg-gray-900/5">
-                                        <p className="text-xs font-bold text-gray-900 mb-3 flex items-center gap-2 uppercase tracking-wide">
-                                            <CheckCircle size={14} className="text-gray-900" /> Strengths
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    {/* Strengths green border card */}
+                                    <div className="p-5 rounded-2xl border border-emerald-500/10 bg-emerald-500/2 space-y-3">
+                                        <p className="text-xs font-bold text-emerald-400 flex items-center gap-2 uppercase tracking-widest">
+                                            <CheckCircle size={14} /> Key Strengths
                                         </p>
                                         <ul className="space-y-2">
                                             {feedback.strengths?.map((s, i) => (
-                                                <li key={i} className="text-sm text-text-secondary flex items-start gap-2">
-                                                    <span className="text-gray-900/50 mt-0.5">•</span> {s}
+                                                <li key={i} className="text-xs text-text-secondary flex items-start gap-2.5 font-medium leading-relaxed">
+                                                    <span className="text-emerald-500 mt-1">•</span> {s}
                                                 </li>
                                             ))}
                                         </ul>
                                     </div>
 
-                                    {/* Weaknesses */}
-                                    <div className="p-4 rounded-xl border border-gray-200 bg-surface">
-                                        <p className="text-xs font-bold text-gray-900 mb-3 flex items-center gap-2 uppercase tracking-wide">
-                                            <XCircle size={14} className="text-text-muted" /> Areas to Improve
+                                    {/* Areas to Improve crimson border card */}
+                                    <div className="p-5 rounded-2xl border border-rose-500/10 bg-rose-500/2 space-y-3">
+                                        <p className="text-xs font-bold text-rose-400 flex items-center gap-2 uppercase tracking-widest">
+                                            <XCircle size={14} /> Improvement Matrix
                                         </p>
                                         <ul className="space-y-2">
                                             {feedback.weaknesses?.map((w, i) => (
-                                                <li key={i} className="text-sm text-text-secondary flex items-start gap-2">
-                                                    <span className="text-gray-900/30 mt-0.5">•</span> {w}
+                                                <li key={i} className="text-xs text-text-secondary flex items-start gap-2.5 font-medium leading-relaxed">
+                                                    <span className="text-rose-500 mt-1">•</span> {w}
                                                 </li>
                                             ))}
                                         </ul>
                                     </div>
                                 </div>
 
-                                {/* Ideal Answer */}
-                                <div className="p-4 rounded-xl border border-gray-300 bg-surface relative overflow-hidden">
-                                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-600" />
-                                    <p className="text-xs font-bold text-gray-900 mb-2 ml-2 uppercase tracking-wide">Ideal Answer</p>
-                                    <p className="text-sm text-text-secondary ml-2 leading-relaxed">{feedback.idealAnswer}</p>
+                                {/* Ideal Answer Block */}
+                                <div className="p-5 rounded-2xl border border-brand-500/10 bg-brand-500/2 relative overflow-hidden">
+                                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-500" />
+                                    <p className="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 ml-2">Verified Model Answer</p>
+                                    <p className="text-xs text-text-secondary ml-2 leading-relaxed font-semibold">{feedback.idealAnswer}</p>
                                 </div>
 
-                                {/* Tip */}
+                                {/* Pro Tip block */}
                                 {feedback.improvementTip && (
-                                    <div className="p-3 border-l-2 border-white/30 pl-4">
-                                        <p className="text-xs font-bold text-gray-900 mb-1 uppercase tracking-wide flex items-center gap-1.5">
-                                            <Lightbulb size={12} /> Pro Tip
-                                        </p>
-                                        <p className="text-sm text-text-secondary">{feedback.improvementTip}</p>
+                                    <div className="p-4 border-l border-white/10 pl-5 flex gap-3">
+                                        <Lightbulb size={16} className="text-brand-400 flex-shrink-0 mt-0.5 animate-pulse" />
+                                        <div className="space-y-0.5">
+                                            <p className="text-[10px] font-bold text-white uppercase tracking-wider">Interviewer pro-tip</p>
+                                            <p className="text-xs text-text-secondary leading-relaxed font-semibold">{feedback.improvementTip}</p>
+                                        </div>
                                     </div>
                                 )}
                             </div>
                         )}
 
-                        <div className="flex justify-end mt-6 pt-6 border-t border-gray-200">
+                        <div className="flex justify-end border-t border-white/5 pt-6">
                             <button
                                 onClick={handleNext}
-                                className="px-6 py-2.5 rounded-full bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition-colors flex items-center gap-2"
+                                className="px-6 py-3 bg-gradient-to-r from-brand-600 to-indigo-600 text-white rounded-full text-xs font-bold hover:from-brand-500 hover:to-indigo-500 transition-all flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                             >
                                 {currentQuestionIndex < totalQuestions - 1 ? (
-                                    <>Next Question <ChevronRight size={18} /></>
+                                    <>Load Next Prompt <ChevronRight size={16} /></>
                                 ) : (
-                                    <>Finish Interview <ArrowRight size={18} /></>
+                                    <>Compile Evaluation Report <ArrowRight size={16} /></>
                                 )}
                             </button>
                         </div>
@@ -414,30 +436,30 @@ export default function InterviewPage() {
                 </div>
             )}
 
-            {/* End Interview Modal */}
-            <Modal isOpen={showEndModal} onClose={() => setShowEndModal(false)} title="End Interview?">
-                <div className="space-y-5">
-                    <div className="flex items-start gap-3 p-4 rounded-xl border border-gray-300 bg-surface">
-                        <AlertTriangle size={20} className="text-gray-900 mt-0.5 flex-shrink-0" />
-                        <div>
-                            <p className="text-sm font-semibold text-gray-900">Are you sure you want to end this interview?</p>
-                            <p className="text-sm text-text-muted mt-2 leading-relaxed">
-                                You've answered {currentQuestionIndex} out of {totalQuestions} questions.
-                                Unanswered questions will be marked as skipped.
+            {/* End Session Confirmation Modal */}
+            <Modal isOpen={showEndModal} onClose={() => setShowEndModal(false)} title="End Simulator Session?">
+                <div className="space-y-6">
+                    <div className="flex items-start gap-4 p-5 rounded-2xl border border-rose-500/15 bg-rose-500/2">
+                        <AlertTriangle size={24} className="text-rose-400 mt-0.5 flex-shrink-0" />
+                        <div className="space-y-2">
+                            <p className="font-bold text-white text-base">Terminate evaluation prematurely?</p>
+                            <p className="text-xs text-text-secondary leading-relaxed font-semibold">
+                                You have answered {currentQuestionIndex} out of {totalQuestions} questions.
+                                Ending the session will record unanswered items as skipped, and generate the final grading report immediately.
                             </p>
                         </div>
                     </div>
-                    <div className="flex justify-end gap-3">
-                        <button onClick={() => setShowEndModal(false)} className="px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-900/5 text-gray-900 transition-colors">
-                            Continue
+                    <div className="flex justify-end gap-3 border-t border-white/5 pt-4">
+                        <button onClick={() => setShowEndModal(false)} className="px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-white/4 text-white transition-colors cursor-pointer">
+                            Resume Session
                         </button>
                         <button
                             onClick={handleEndInterview}
                             disabled={isEnding}
-                            className="px-5 py-2 rounded-lg bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition-colors disabled:opacity-70 flex items-center gap-2"
+                            className="px-5 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold uppercase tracking-wider transition-colors disabled:opacity-70 flex items-center gap-2 cursor-pointer"
                         >
-                            {isEnding ? <span className="w-4 h-4 border-2 border-surface/20 border-t-surface rounded-full animate-spin" /> : null}
-                            End & Generate Report
+                            {isEnding ? <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : null}
+                            End & Compile
                         </button>
                     </div>
                 </div>
